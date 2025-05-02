@@ -9,9 +9,9 @@ def draw_pifagor_tree(level, x, y, length, angle):
     y2 = y + length * math.sin(angle)
     plt.plot([x, x2], [y, y2], color='green')
     
-    new_length = length * 0.7    
-    draw_pifagor_tree(level - 1, x2, y2, new_length, angle + math.pi / 3)
-    draw_pifagor_tree(level - 1, x2, y2, new_length, angle - math.pi / 3)
+    new_length = length * 0.7   
+    draw_pifagor_tree(level - 1, x2, y2, new_length, angle + math.pi / 4)
+    draw_pifagor_tree(level - 1, x2, y2, new_length, angle - math.pi / 4)
 
 level = int(input("Enter the level of recursion: "))
 plt.figure(figsize=(10, 10))
