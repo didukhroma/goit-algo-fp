@@ -1,5 +1,5 @@
 import uuid
-
+import heapq
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -42,14 +42,20 @@ def draw_tree(tree_root):
     plt.show()
 
 
-def draw_heap
-# Створення дерева
-root = Node(0)
-root.left = Node(4)
-root.left.left = Node(5)
-root.left.right = Node(10)
-root.right = Node(1)
-root.right.left = Node(3)
+def build_tree_from_heap(arr):
+    arr = [-item for item in arr]
+    heapq.heapify(arr)
+    
+    nodes = [Node(-value) for value in arr]  
+
+    for i in range(len(nodes) // 2):
+        if 2 * i + 1 < len(nodes):
+            nodes[i].left = nodes[2 * i + 1]
+        if 2 * i + 2 < len(nodes):
+            nodes[i].right = nodes[2 * i + 2]    
+    return nodes[0]
 
 # Відображення дерева
+test_arr = [1, 4, 3, 5, 10, 0, 2]
+root = build_tree_from_heap(test_arr)
 draw_tree(root)
