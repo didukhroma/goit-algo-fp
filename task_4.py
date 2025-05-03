@@ -42,6 +42,7 @@ def draw_tree(tree_root):
     plt.show()
 
 
+def draw_heap
 # Створення дерева
 root = Node(0)
 root.left = Node(4)
