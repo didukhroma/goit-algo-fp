@@ -8,7 +8,7 @@ items = {
 }
 
 def greedy_algorithm(budget):
-    sorted_items = sorted(items.items(), key = lambda item: item[1]["calories"] / item[1]["cost"])
+    sorted_items = sorted(items.items(), key = lambda item: item[1]["calories"] / item[1]["cost"], reverse=True)
     total_calories = 0
     selected_dishes = []
     for item in sorted_items:
@@ -20,32 +20,31 @@ def greedy_algorithm(budget):
 
 def dynamic_programming(budget):
     n = len(items)
-    wt = [items[dish]["calories"] for dish in items]
-    val = [items[dish]["cost"] for dish in items]
-    W = budget
-    K = [[0 for w in range(W + 1)] for i in range(n + 1)]
+    item_names = list(items.keys())
+    dp = [[0 for _ in range(budget + 1)] for _ in range(len(items) + 1)]
 
-    # будуємо таблицю K знизу вгору
-    for i in range(n + 1):
-        for w in range(W + 1):
-            if i == 0 or w == 0:
-                K[i][w] = 0
-            elif wt[i - 1] <= w:
-                K[i][w] = max(val[i - 1] + K[i - 1][w - wt[i - 1]], K[i - 1][w])
-            else:
-                K[i][w] = K[i - 1][w]
+    trace = [[False for _ in range(budget + 1)] for _ in range(n + 1)]
 
-    total_calories = K[n][W]
-    selected_dishes = []
-    i = n
-    while i > 0 and W > 0:
-        if K[i][W] == K[i - 1][W]:
-            i -= 1
-        else:
-            selected_dishes.append(list(items.keys())[i - 1])
-            W -= wt[i - 1]
-            i -= 1
-    return selected_dishes, total_calories
+    for i in range(1, n + 1):
+        name = item_names[i - 1]
+        cost = items[name]["cost"]
+        calories = items[name]["calories"]
+        for j in range(budget + 1):
+            dp[i][j] = dp[i - 1][j]
+            if cost <= j:
+                if dp[i - 1][j - cost] + calories > dp[i][j]:
+                    dp[i][j] = dp[i - 1][j - cost] + calories
+                    trace[i][j] = True
+
+    selected_items = []
+    current_budget = budget
+    for i in range(n, 0, -1):
+        if trace[i][current_budget]:
+            name = item_names[i - 1]
+            selected_items.append(name)
+            current_budget -= items[name]["cost"]
+
+    return  selected_items,dp[n][budget]
 
 budget = int(input("Enter your budget: "))
 selected_dishes, total_calories = greedy_algorithm(budget)
